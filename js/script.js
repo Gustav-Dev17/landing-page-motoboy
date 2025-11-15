@@ -33,7 +33,7 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
-        
+
         // Verificar se é um link interno válido (não é apenas "#" e não é link externo)
         if (href && href !== '#' && href.startsWith('#') && !href.startsWith('http')) {
             e.preventDefault();
@@ -75,15 +75,27 @@ window.addEventListener('scroll', () => {
 });
 
 // Aplicar configurações do CONFIG
+// Suporta tanto variáveis de ambiente do Netlify quanto config.js local
 const applyConfig = () => {
-    // Verificar se CONFIG está disponível
-    if (typeof CONFIG === 'undefined') {
+    // Tentar ler variáveis de ambiente primeiro (Netlify)
+    let config = {};
+
+    if (typeof window !== 'undefined' && window.__NETLIFY_ENV__) {
+        // Variáveis injetadas pelo Netlify
+        config = window.__NETLIFY_ENV__;
+    } else if (typeof CONFIG !== 'undefined') {
+        // Fallback para config.js local
+        config = CONFIG;
+    } else {
         console.warn('CONFIG não encontrado. Usando valores padrão.');
         return;
     }
 
+    // Usar CONFIG global se disponível (compatibilidade)
+    const CONFIG_TO_USE = typeof CONFIG !== 'undefined' ? CONFIG : config;
+
     // Atualizar links do WhatsApp
-    const whatsappUrl = `https://wa.me/${CONFIG.whatsapp}`;
+    const whatsappUrl = `https://wa.me/${CONFIG_TO_USE.whatsapp}`;
 
     // Hero section
     const heroWhatsappBtn = document.getElementById('hero-whatsapp-btn');
@@ -91,29 +103,29 @@ const applyConfig = () => {
     const heroRegiao = document.getElementById('hero-regiao');
 
     if (heroWhatsappBtn) heroWhatsappBtn.href = whatsappUrl;
-    if (heroWhatsappText) heroWhatsappText.textContent = CONFIG.whatsappButtonText;
-    if (heroRegiao) heroRegiao.textContent = CONFIG.regiao;
+    if (heroWhatsappText) heroWhatsappText.textContent = CONFIG_TO_USE.whatsappButtonText;
+    if (heroRegiao) heroRegiao.textContent = CONFIG_TO_USE.regiao;
 
     // Services section
     const servicesWhatsappBtn = document.getElementById('services-whatsapp-btn');
     const servicesWhatsappText = document.getElementById('services-whatsapp-text');
 
     if (servicesWhatsappBtn) servicesWhatsappBtn.href = whatsappUrl;
-    if (servicesWhatsappText) servicesWhatsappText.textContent = CONFIG.whatsappButtonText;
+    if (servicesWhatsappText) servicesWhatsappText.textContent = CONFIG_TO_USE.whatsappButtonText;
 
     // Schedule box
     const scheduleHorario = document.getElementById('schedule-horario');
     const scheduleExclusivo = document.getElementById('schedule-exclusivo');
 
-    if (scheduleHorario) scheduleHorario.textContent = `Atendimento de ${CONFIG.atendimento.horario}.`;
-    if (scheduleExclusivo) scheduleExclusivo.textContent = CONFIG.atendimento.exclusivo;
+    if (scheduleHorario) scheduleHorario.textContent = `Atendimento de ${CONFIG_TO_USE.atendimento.horario}.`;
+    if (scheduleExclusivo) scheduleExclusivo.textContent = CONFIG_TO_USE.atendimento.exclusivo;
 
     // Diferencial section
     const diferencialWhatsappBtn = document.getElementById('diferencial-whatsapp-btn');
     const diferencialWhatsappText = document.getElementById('diferencial-whatsapp-text');
 
     if (diferencialWhatsappBtn) diferencialWhatsappBtn.href = whatsappUrl;
-    if (diferencialWhatsappText) diferencialWhatsappText.textContent = CONFIG.whatsappButtonText;
+    if (diferencialWhatsappText) diferencialWhatsappText.textContent = CONFIG_TO_USE.whatsappButtonText;
 
     // Footer
     const footerHorario = document.getElementById('footer-horario');
@@ -121,16 +133,16 @@ const applyConfig = () => {
     const footerWhatsappLink = document.getElementById('footer-whatsapp-link');
     const footerRegiao = document.getElementById('footer-regiao');
 
-    if (footerHorario) footerHorario.textContent = CONFIG.atendimento.horario;
-    if (footerExclusivo) footerExclusivo.textContent = CONFIG.atendimento.exclusivo;
+    if (footerHorario) footerHorario.textContent = CONFIG_TO_USE.atendimento.horario;
+    if (footerExclusivo) footerExclusivo.textContent = CONFIG_TO_USE.atendimento.exclusivo;
     if (footerWhatsappLink) footerWhatsappLink.href = whatsappUrl;
-    if (footerRegiao) footerRegiao.textContent = CONFIG.regiao;
+    if (footerRegiao) footerRegiao.textContent = CONFIG_TO_USE.regiao;
 
     // Services list
     const servicesList = document.getElementById('services-list');
-    if (servicesList && CONFIG.servicos && Array.isArray(CONFIG.servicos)) {
+    if (servicesList && CONFIG_TO_USE.servicos && Array.isArray(CONFIG_TO_USE.servicos)) {
         servicesList.innerHTML = '';
-        CONFIG.servicos.forEach(servico => {
+        CONFIG_TO_USE.servicos.forEach(servico => {
             const serviceItem = document.createElement('div');
             serviceItem.className = 'service-item';
             serviceItem.textContent = `• ${servico}`;

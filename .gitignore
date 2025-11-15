@@ -1,6 +1,14 @@
 # Arquivos de configuração local (não versionar dados sensíveis)
-# Mantenha config.js local e use config.example.js como template
-config.js
+# O .env é gerado automaticamente a partir do .env.example durante o build
+
+# Variáveis de ambiente (não versionar dados sensíveis)
+.env
+.env.local
+.env.*.local
+
+# Node modules (se usar npm)
+node_modules/
+package-lock.json
 
 # Sistema operacional
 .DS_Store

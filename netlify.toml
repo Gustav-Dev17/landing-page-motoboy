@@ -1,0 +1,13 @@
+# Configuração do Netlify
+[build]
+  # Comando de build (gera config.js a partir de variáveis de ambiente)
+  command = "node scripts/build-config.js"
+  # Diretório de publicação
+  publish = "."
+
+# Configurações de redirecionamento (opcional)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

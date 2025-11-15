@@ -1,0 +1,23 @@
+{
+  "name": "pantoja-entregas",
+  "version": "1.0.0",
+  "description": "Landing page para Pantoja Entregas Rápidas",
+  "scripts": {
+    "build": "node scripts/build-config.js",
+    "build:local": "node scripts/build-config.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "landing-page",
+    "delivery",
+    "netlify"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
+

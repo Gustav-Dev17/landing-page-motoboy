@@ -61,32 +61,60 @@ O número deve estar no formato: **código do país + DDD + número** (sem carac
 
 ⚠️ **IMPORTANTE**:
 
-- O arquivo `config.js` está no `.gitignore` e **NÃO será enviado para o GitHub**
-- Use o arquivo `config.example.js` como template (este sim pode ir para o GitHub)
-- **Nunca** faça commit do `config.js` com dados reais
+- O arquivo `.env` é **gerado automaticamente** a partir do `.env.example` durante o build
+- O arquivo `.env` está no `.gitignore` e **NÃO será enviado para o GitHub**
+- Use o arquivo `.env.example` como template (este sim pode ir para o GitHub)
+- **Nunca** faça commit do `.env` com dados reais
+- As configurações são **injetadas diretamente no HTML** durante o build
+- No Netlify, use as **variáveis de ambiente** do dashboard (veja `CONFIGURAR_NETLIFY_VARIAVEIS.md`)
 
 ## 🚀 Como Usar
 
+### Desenvolvimento Local
+
 1. Clone ou baixe o repositório
-2. **Copie `config.example.js` para `config.js`**:
+2. **Instale as dependências** (apenas na primeira vez):
    ```bash
-   cp config.example.js config.js
+   npm install
    ```
-3. Edite o arquivo `config.js` na raiz com suas informações reais
-4. Abra `index.html` no navegador ou faça o deploy
+3. **Execute o build** (o `.env` será gerado automaticamente a partir do `.env.example`):
+   ```bash
+   npm run build
+   ```
+4. **Edite o arquivo `.env`** (gerado automaticamente) com suas informações reais
+5. **Execute o build novamente** para injetar as configurações no HTML:
+   ```bash
+   npm run build
+   ```
+6. Abra `index.html` no navegador
+
+**Nota:** O arquivo `.env` é gerado automaticamente a partir do `.env.example` durante o primeiro build. As configurações são injetadas diretamente no HTML como um script inline.
+
+### Produção (Netlify)
+
+1. Configure as **variáveis de ambiente** no Netlify Dashboard
+2. Faça o deploy (as configurações serão injetadas no HTML durante o build)
+3. Pronto!
+
+Veja instruções detalhadas em `CONFIGURAR_NETLIFY_VARIAVEIS.md`
 
 ## 📁 Estrutura de Arquivos
 
 ```
 pantoja-entregas/
-├── index.html          # Página principal
-├── config.js           # Arquivo de configuração (EDITAR ESTE - na raiz para fácil acesso)
+├── index.html              # Página principal (configurações injetadas durante o build)
+├── .env.example            # Template de variáveis de ambiente
+├── .env                    # Variáveis de ambiente locais (gerado automaticamente, não versionado)
+├── package.json            # Dependências e scripts
+├── netlify.toml            # Configuração do Netlify
+├── scripts/
+│   └── build-config.js     # Script que gera .env e injeta variáveis no HTML
 ├── css/
-│   └── style.css       # Estilos CSS
+│   └── style.css           # Estilos CSS
 ├── js/
-│   └── script.js       # JavaScript principal
-├── README.md           # Documentação
-└── .gitignore          # Arquivos ignorados pelo Git
+│   └── script.js           # JavaScript principal
+├── images/                 # Imagens do site
+└── README.md               # Documentação
 ```
 
 ## 📤 Como Publicar
