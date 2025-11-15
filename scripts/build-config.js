@@ -26,15 +26,21 @@ if (!fs.existsSync(envPath)) {
     }
 }
 
-// 2. Carregar variáveis de ambiente do arquivo .env (se existir)
-// Usar encoding UTF-8 explicitamente
-if (fs.existsSync(envPath)) {
+// 2. Carregar variáveis de ambiente do arquivo .env (apenas se não estiver no Netlify)
+// No Netlify, as variáveis vêm de process.env automaticamente
+// Só carregar .env se estivermos em ambiente local (sem variáveis do Netlify)
+const isNetlify = process.env.NETLIFY === 'true' || process.env.CI === 'true';
+const hasNetlifyVars = process.env.CONFIG_WHATSAPP || process.env.CONFIG_EMAIL;
+
+if (!isNetlify && !hasNetlifyVars && fs.existsSync(envPath)) {
+    console.log('📝 Ambiente local detectado. Carregando .env...');
     try {
         // Usar dotenv com encoding UTF-8
         const dotenv = require('dotenv');
         const result = dotenv.config({ 
             path: envPath,
-            encoding: 'utf8'
+            encoding: 'utf8',
+            override: false // Não sobrescrever variáveis já existentes
         });
         
         if (result.error) {
@@ -62,6 +68,7 @@ if (fs.existsSync(envPath)) {
                             value = value.slice(1, -1);
                         }
                         
+                        // Só definir se não existir (priorizar variáveis de ambiente)
                         if (!process.env[key]) {
                             process.env[key] = value;
                         }
@@ -72,6 +79,8 @@ if (fs.existsSync(envPath)) {
     } catch (error) {
         console.warn('⚠️ Erro ao processar .env:', error.message);
     }
+} else if (isNetlify || hasNetlifyVars) {
+    console.log('🌐 Ambiente Netlify detectado. Usando variáveis de ambiente do Netlify.');
 }
 
 // 3. Ler variáveis de ambiente do Netlify/process.env ou usar valores padrão
@@ -178,4 +187,12 @@ console.log('📝 Configurações aplicadas:');
 console.log(`   - WhatsApp: ${CONFIG.whatsapp}`);
 console.log(`   - Email: ${CONFIG.email}`);
 console.log(`   - Região: ${CONFIG.regiao}`);
+console.log(`   - Serviços: ${CONFIG.servicos ? CONFIG.servicos.length : 0} itens`);
+
+// Debug: mostrar de onde vieram as variáveis
+if (process.env.CONFIG_WHATSAPP) {
+    console.log('✅ Variáveis de ambiente detectadas (Netlify ou sistema)');
+} else {
+    console.log('⚠️ Usando valores padrão - verifique se as variáveis estão configuradas');
+}
 
