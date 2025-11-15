@@ -1,0 +1,24 @@
+# Arquivos de configuração local (não versionar dados sensíveis)
+# Mantenha config.js local e use config.example.js como template
+config.js
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporários
+*.tmp
+.cache/
+
